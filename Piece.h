@@ -10,6 +10,7 @@ public:
 	{
 	};
 	void print();
+	virtual int isValidMove(int org_blk, int trg_blk);
 
 private:
 	PieceType m_type;

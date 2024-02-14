@@ -34,3 +34,8 @@ void Piece::print()
 
 	std::cout << symbol;
 }
+
+int Piece::isValidMove(int org_blk, int trg_blk)
+{
+	return 0;
+}
