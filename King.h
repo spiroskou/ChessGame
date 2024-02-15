@@ -3,6 +3,6 @@
 class King : public Piece
 {
 public:
-	King() : Piece(PieceType::King) {};
+	King(PieceColor col) : Piece(col, PieceType::King) {};
 };
 

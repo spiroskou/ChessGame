@@ -4,6 +4,6 @@ class Rook :
     public Piece
 {
 public:
-    Rook() : Piece(PieceType::Rook) {};
+    Rook(PieceColor col) : Piece(col, PieceType::Rook) {};
 };
 

@@ -7,19 +7,19 @@ constexpr auto MAX_NUM_BLOCKS = 64;
 class Block
 {
 private:
-	Piece m_piece;
+	Piece *m_piece;
 
 public:
 
-	Block(Piece piece = PieceType::Empty)
+	Block(Piece *piece = nullptr)
 		: m_piece{ piece }
 	{
 	};
 
-	const Piece& getPiece() { return m_piece; };
-	void setPiece(const Piece& piece) { m_piece = piece; };
+	Piece *getPiece() const { return m_piece; };
+	void setPiece(Piece* piece) { m_piece = piece; };
 
 	void print();
-	void blockMove(Block& org, Block& trg);
+	bool isEmpty() const { return getPiece()->getType() == PieceType::Empty ? 1 : 0; };
 };
 

@@ -4,7 +4,7 @@
 class Knight : public Piece
 {
 public:
-	Knight() : Piece(PieceType::Knight)
+	Knight(PieceColor col) : Piece(col, PieceType::Knight)
 	{
 	};
 };

@@ -1,7 +1,8 @@
 #include <iostream>
+#include <array>
 #include "Piece.h"
 
-void Piece::print()
+void Piece::print() const
 {
 	char symbol = 0;
 
@@ -33,9 +34,4 @@ void Piece::print()
 	}
 
 	std::cout << symbol;
-}
-
-int Piece::isValidMove(int org_blk, int trg_blk)
-{
-	return 0;
 }

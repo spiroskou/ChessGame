@@ -4,6 +4,6 @@ class Queen :
     public Piece
 {
 public:
-    Queen() : Piece(PieceType::Queen) {};
+    Queen(PieceColor col) : Piece(col, PieceType::Queen) {};
 };
 

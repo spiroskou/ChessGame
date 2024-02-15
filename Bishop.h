@@ -4,6 +4,6 @@ class Bishop :
     public Piece
 {
 public:
-    Bishop() : Piece(PieceType::Bishop) {};
+    Bishop(PieceColor col) : Piece(col, PieceType::Bishop) {};
 };
 
