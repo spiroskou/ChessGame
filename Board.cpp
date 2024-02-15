@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Board.h"
 #include "Piece.h"
+#include <windows.h>
 
 std::shared_ptr<Board> board = std::make_shared<Board>();
 
@@ -27,7 +28,7 @@ void Board::print()
 void Board::replace(int org_row, int org_col, int trg_row, int trg_col)
 {
 	m_layout[trg_row][trg_col].setPiece(m_layout[org_row][org_col].getPiece());
-	m_layout[org_row][org_col].setPiece(new Piece());
+	m_layout[org_row][org_col].setPiece(std::make_shared<Piece>());
 }
 
 bool Board::move(int org_row, int org_col, int trg_row, int trg_col)

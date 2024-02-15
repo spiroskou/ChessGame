@@ -38,5 +38,7 @@ int main()
 		}
 	}
 
+	//board->move(1, 1, 3, 1); // move pawn 2 squares ahead
+
 	return 0;
 }

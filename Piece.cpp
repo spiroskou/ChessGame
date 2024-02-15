@@ -1,9 +1,16 @@
 #include <iostream>
 #include <array>
 #include "Piece.h"
+#include <windows.h>
 
 void Piece::print() const
 {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hConsole == INVALID_HANDLE_VALUE) {
+		std::cerr << "Error getting console handle\n";
+		return;
+	}
+
 	char symbol = 0;
 
 	switch (m_type)
@@ -33,5 +40,18 @@ void Piece::print() const
 		break;
 	}
 
+	switch (m_color) {
+	case PieceColor::Black:
+		SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
+		break;
+	case PieceColor::White:
+		SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		break;
+	case PieceColor::Blank:
+	default:
+		break;
+	}
+
 	std::cout << symbol;
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
