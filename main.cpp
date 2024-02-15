@@ -8,7 +8,7 @@ int main()
 
 	board->print();
 
-	board->move(1, 1, 3, 1); // move leftmost pawn 2 squares ahead
+	board->move(1, 1, 3, 1); // move pawn 2 squares ahead
 	std::cout << std::endl;
 
 	board->print();
