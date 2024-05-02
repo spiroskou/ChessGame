@@ -30,7 +30,9 @@ public:
     bool move(int org_row, int org_col, int trg_row, int trg_col);
     void replace(int org_row, int org_col, int trg_row, int trg_col);
     bool isValidPosition(int row, int col);
-    const Block& getBlock(int row, int col) { return m_layout[row][col]; };
+    Block& getBlock(int row, int col) { return m_layout[row][col]; };
+    std::shared_ptr<Piece> getPieceInBlock(int row, int col) { return getBlock(row, col).getPiece(); };
+    void setPieceInBlock(int row, int col, std::shared_ptr<Piece> piece) { m_layout[row][col].setPiece(piece); };
 };
 
 std::shared_ptr<Board> getBoard();
