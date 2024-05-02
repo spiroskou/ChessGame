@@ -6,7 +6,7 @@
 bool Pawn::isValidMove(int org_row, int org_col, int trg_row, int trg_col) const
 {
     std::shared_ptr<Board> board = getBoard();
-	int direction = (this->getColor() == PieceColor::White) ? 1 : -1;
+    int direction = (this->getColor() == PieceColor::White) ? 1 : -1;
     Block trg_block = board->getBlock(trg_row, trg_col);
     std::shared_ptr<Piece> trg_piece = trg_block.getPiece();
 
