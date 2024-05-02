@@ -25,8 +25,8 @@ public:
         {Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black)), Block(std::make_shared<Pawn>(PieceColor::Black))},
         {Block(std::make_shared<Rook>(PieceColor::Black)), Block(std::make_shared<Knight>(PieceColor::Black)), Block(std::make_shared<Bishop>(PieceColor::Black)), Block(std::make_shared<Queen>(PieceColor::Black)), Block(std::make_shared<King>(PieceColor::Black)), Block(std::make_shared<Bishop>(PieceColor::Black)), Block(std::make_shared<Knight>(PieceColor::Black)), Block(std::make_shared<Rook>(PieceColor::Black))},
     } } {};
-	void print();
 
+    void print();
     bool move(int org_row, int org_col, int trg_row, int trg_col);
     void replace(int org_row, int org_col, int trg_row, int trg_col);
     bool isValidPosition(int row, int col);
