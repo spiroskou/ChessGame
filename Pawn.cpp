@@ -31,6 +31,6 @@ bool Pawn::isValidMove(int org_row, int org_col, int trg_row, int trg_col) const
             }
         }
     }
-
-	return false;
+	
+    return false;
 }
