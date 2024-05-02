@@ -11,7 +11,6 @@ bool Pawn::isValidMove(int org_row, int org_col, int trg_row, int trg_col) const
     std::shared_ptr<Piece> trg_piece = trg_block.getPiece();
 
     if (trg_piece->getType() == PieceType::Empty) {
-
         // Pawn can move forward one square
         if (trg_col == org_col && trg_row == org_row + direction) {
             return true;
