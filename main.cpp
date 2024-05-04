@@ -14,14 +14,14 @@ int main()
 	// Game Loop!
 	while (true) {
 		std::string input;
-		int srcRow = -1, srcCol = -1, destRow = -1, destCol = -1;
+		int src_row = -1, src_col = -1, dest_row = -1, dest_col = -1;
 
-		// Get input from player
+		// Get input from players
 		std::cout << (turn_counter % 2 != 0 ? "Player1 (Green) " : "Player2 (Red) ") << "turn" << std::endl;
 		std::cout << "Enter 'q' to quit or four integers: srcRow srcCol destRow destCol: ";
 		std::getline(std::cin, input);
 		std::istringstream iss(input);
-		iss >> srcRow >> srcCol >> destRow >> destCol;
+		iss >> src_row >> src_col >> dest_row >> dest_col;
 
 		// Check if the input is 'q'
 		if (input == "q" || input == "Q") {
@@ -29,7 +29,7 @@ int main()
 		}
 
 		// Make the pawn move
-		bool res = board->move(srcRow, srcCol, destRow, destCol);
+		bool res = board->move(src_row, src_col, dest_row, dest_col);
 
 		// Check if the move was valid and proceed to the next round
 		if (res == true) {
