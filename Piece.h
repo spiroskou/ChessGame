@@ -19,6 +19,7 @@ public:
 	const PieceType& getType() const { return m_type; };
 	void print() const;
 	virtual bool isValidMove(int org_row, int org_col, int trg_row, int trg_col) const { return false; };
+	bool isEmpty() const { return getType() == PieceType::Empty ? 1 : 0; };
 
 private:
 	PieceType m_type;

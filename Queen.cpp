@@ -11,9 +11,9 @@ bool Queen::isValidMove(int org_row, int org_col, int trg_row, int trg_col) cons
     if (org_row == trg_row || org_col == trg_col || std::abs(trg_row - org_row) == std::abs(trg_col - org_col)) {
         // Check if the path is clear
         if (isPathClear(org_row, org_col, trg_row, trg_col)) {
-            // Check if the target block is empty or contains an opponent's piece
-            Block trg_block = board->getBlock(trg_row, trg_col);
-            if (trg_block.getPiece()->getType() == PieceType::Empty || trg_block.getPiece()->getColor() != this->getColor()) {
+            // Check if the target piece is empty or contains an opponent's piece
+            std::shared_ptr<Piece> trg_piece = board->getPiece(trg_row, trg_col);
+            if (trg_piece->isEmpty() || trg_piece->getColor() != this->getColor()) {
                 return true;
             }
         }
@@ -37,8 +37,8 @@ bool Queen::isPathClear(int org_row, int org_col, int trg_row, int trg_col) cons
 
         // Iterate over the squares along the path
         while (row != trg_row || col != trg_col) {
-            if (!board->getBlock(row, col).isEmpty()) {
-                return false; // Path is blocked
+            if (!board->getPiece(row, col)->isEmpty()) {
+                return false; // Path is pieceed
             }
             row += row_direction;
             col += col_direction;

@@ -19,7 +19,7 @@ void Board::print()
 {
 	for (int row = 0; row < 8; row++) {
 		for (int col = 0; col < 8; col++) {
-			getBlock(row, col).print();
+			getPiece(row, col)->print();
 			std::cout << ' ';
 		}
 		std::cout << std::endl;
@@ -27,9 +27,9 @@ void Board::print()
 }
 void Board::replace(int org_row, int org_col, int trg_row, int trg_col)
 {
-	std::shared_ptr<Piece> org_piece = getPieceInBlock(org_row, org_col);
-	setPieceInBlock(trg_row, trg_col, org_piece);
-	setPieceInBlock(org_row, org_col, std::make_shared<Piece>());
+	std::shared_ptr<Piece> org_piece = getPiece(org_row, org_col);
+	setPiece(trg_row, trg_col, org_piece);
+	setPiece(org_row, org_col, std::make_shared<Piece>());
 }
 
 bool Board::move(int org_row, int org_col, int trg_row, int trg_col)
@@ -40,7 +40,7 @@ bool Board::move(int org_row, int org_col, int trg_row, int trg_col)
 	}
 
 	// Check if the player chose a valid move for the corresponding Piece
-	if (!getPieceInBlock(org_row, org_col)->isValidMove(org_row, org_col, trg_row, trg_col)) {
+	if (!getPiece(org_row, org_col)->isValidMove(org_row, org_col, trg_row, trg_col)) {
 		return false;
 	}
 

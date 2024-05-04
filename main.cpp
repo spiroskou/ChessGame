@@ -33,12 +33,14 @@ int main()
 
 		// Check if the move was valid and proceed to the next round
 		if (res == true) {
-			turn_counter++;
 			board->print();
 			std::cout << std::endl;
 		} else {
 			std::cout << "Invalid Move. Try again" << std::endl;
+			continue;
 		}
+
+		turn_counter++;
 	}
 
 	return 0;

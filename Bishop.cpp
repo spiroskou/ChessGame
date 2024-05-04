@@ -12,8 +12,8 @@ bool Bishop::isValidMove(int org_row, int org_col, int trg_row, int trg_col) con
         // Check if the path is clear
         if (isPathClear(org_row, org_col, trg_row, trg_col)) {
             // Check if the target block is empty or contains an opponent's piece
-            Block trg_block = board->getBlock(trg_row, trg_col);
-            if (trg_block.getPiece()->getType() == PieceType::Empty || trg_block.getPiece()->getColor() != this->getColor()) {
+            std::shared_ptr<Piece> trg_piece = board->getPiece(trg_row, trg_col);
+            if (trg_piece->isEmpty() || trg_piece->getColor() != this->getColor()) {
                 return true;
             }
         }
@@ -34,7 +34,7 @@ bool Bishop::isPathClear(int org_row, int org_col, int trg_row, int trg_col) con
     int row = org_row + row_direction;
     int col = org_col + col_direction;
     while (row != trg_row && col != trg_col) {
-        if (!board->getBlock(row, col).isEmpty()) {
+        if (!board->getPiece(row, col)->isEmpty()) {
             return false; // Path is blocked
         }
         row += row_direction;
