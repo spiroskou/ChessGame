@@ -25,26 +25,26 @@ void Board::print()
 		std::cout << std::endl;
 	}
 }
-void Board::replace(int org_row, int org_col, int trg_row, int trg_col)
+void Board::replace(int src_row, int src_col, int trg_row, int trg_col)
 {
-	std::shared_ptr<Piece> org_piece = getPiece(org_row, org_col);
-	setPiece(trg_row, trg_col, org_piece);
-	setPiece(org_row, org_col, std::make_shared<Piece>());
+	std::shared_ptr<Piece> src_piece = getPiece(src_row, src_col);
+	setPiece(trg_row, trg_col, src_piece);
+	setPiece(src_row, src_col, std::make_shared<Piece>());
 }
 
-bool Board::move(int org_row, int org_col, int trg_row, int trg_col)
+bool Board::move(int src_row, int src_col, int trg_row, int trg_col)
 {
 	// Check if the player chose valid positions
-	if (!isValidPosition(org_row, org_col) || !isValidPosition(trg_row, trg_col)) {
+	if (!isValidPosition(src_row, src_col) || !isValidPosition(trg_row, trg_col)) {
 		return false;
 	}
 
 	// Check if the player chose a valid move for the corresponding Piece
-	if (!getPiece(org_row, org_col)->isValidMove(org_row, org_col, trg_row, trg_col)) {
+	if (!getPiece(src_row, src_col)->isValidMove(src_row, src_col, trg_row, trg_col)) {
 		return false;
 	}
 
-	replace(org_row, org_col, trg_row, trg_col);
+	replace(src_row, src_col, trg_row, trg_col);
 	
 	return true;
 }

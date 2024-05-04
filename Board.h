@@ -26,8 +26,8 @@ public:
     } } {};
 
     void print();
-    bool move(int org_row, int org_col, int trg_row, int trg_col);
-    void replace(int org_row, int org_col, int trg_row, int trg_col);
+    bool move(int src_row, int src_col, int trg_row, int trg_col);
+    void replace(int src_row, int src_col, int trg_row, int trg_col);
     bool isValidPosition(int row, int col);
     std::shared_ptr<Piece> getPiece(int row, int col) { return m_layout[row][col]; };
     void setPiece(int row, int col, std::shared_ptr<Piece> piece) { m_layout[row][col] = piece; };
