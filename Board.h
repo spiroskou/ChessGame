@@ -28,9 +28,14 @@ public:
     void print();
     bool move(int src_row, int src_col, int trg_row, int trg_col);
     void replace(int src_row, int src_col, int trg_row, int trg_col);
+    std::shared_ptr<Piece> temp_replace(int src_row, int src_col, int trg_row, int trg_col);
+    void restore(int src_row, int src_col, int trg_row, int trg_col, std::shared_ptr<Piece> tmp_piece);
     bool isValidPosition(int row, int col);
     std::shared_ptr<Piece> getPiece(int row, int col) { return m_layout[row][col]; };
     void setPiece(int row, int col, std::shared_ptr<Piece> piece) { m_layout[row][col] = piece; };
+    bool isCheckmate(int turn_counter);
+    std::shared_ptr<King> getKing(PieceColor color, int& king_row, int& king_col);
+    bool isKingInCheck(std::shared_ptr<King> king, int king_row, int king_col) const;
 };
 
 std::shared_ptr<Board> getBoard();

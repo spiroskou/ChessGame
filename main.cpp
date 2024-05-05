@@ -18,7 +18,7 @@ int main()
 
 		// Get input from players
 		std::cout << (turn_counter % 2 != 0 ? "Player1 (Green) " : "Player2 (Red) ") << "turn" << std::endl;
-		std::cout << "Enter 'q' to quit or four integers: srcRow srcCol destRow destCol: ";
+		std::cout << "Enter 'q' to quit or four integers: src_row src_col dest_row dest_col: ";
 		std::getline(std::cin, input);
 		std::istringstream iss(input);
 		iss >> src_row >> src_col >> dest_row >> dest_col;
@@ -38,6 +38,10 @@ int main()
 		} else {
 			std::cout << "Invalid Move. Try again" << std::endl;
 			continue;
+		}
+
+		if (board->isCheckmate(turn_counter)) {
+			std::cout << "Checkmate! Game has ended!" << std::endl;
 		}
 
 		turn_counter++;
