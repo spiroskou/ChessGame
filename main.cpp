@@ -42,6 +42,7 @@ int main()
 
 		if (board->isCheckmate(turn_counter)) {
 			std::cout << "Checkmate! Game has ended!" << std::endl;
+			break;
 		}
 
 		turn_counter++;
