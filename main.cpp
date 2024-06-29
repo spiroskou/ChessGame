@@ -16,9 +16,11 @@ int main()
 		std::string input;
 		int src_row = -1, src_col = -1, dest_row = -1, dest_col = -1;
 
-		// Get input from players
+		// Player Turn starts here
 		std::cout << (turn_counter % 2 != 0 ? "Player1 (Green) " : "Player2 (Red) ") << "turn" << std::endl;
 		std::cout << "Enter 'q' to quit or four integers: src_row src_col dest_row dest_col: ";
+
+		// Get input from players
 		std::getline(std::cin, input);
 		std::istringstream iss(input);
 		iss >> src_row >> src_col >> dest_row >> dest_col;
