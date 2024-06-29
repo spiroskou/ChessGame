@@ -105,7 +105,7 @@ bool Board::isKingInCheck(std::shared_ptr<King> king, int king_row, int king_col
 
 	for (int row = 0; row < 8; row++) {
 		for (int col = 0; col < 8; col++) {
-			std::shared_ptr<Piece> piece = m_layout[row][col];
+			std::shared_ptr<Piece> piece = getPiece(row,col);
 			
 			if (piece->getColor() == king->getColor()) {
 				continue;
