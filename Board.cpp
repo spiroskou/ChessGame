@@ -159,6 +159,7 @@ bool Board::isCheckmate(int turn_counter)
 	// Check if any piece can block the check or capture the attacking piece
 	for (int row = 0; row < 8; ++row) {
 		for (int col = 0; col < 8; ++col) {
+			if (row == king_row && col == king_col) continue;
 			std::shared_ptr<Piece> piece = getPiece(row, col);
 			if (piece->getColor() == opp_color) {
 				// Check all possible moves for this piece
