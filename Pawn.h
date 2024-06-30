@@ -14,5 +14,6 @@ public:
 
     void setFirstMove(char move) { isFirstMove = move; };
     const int getFirstMove() const{ return isFirstMove; };
+    std::string getImagePath() const override;
 };
 

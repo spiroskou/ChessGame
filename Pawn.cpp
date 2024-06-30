@@ -33,3 +33,24 @@ bool Pawn::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
 	
     return false;
 }
+
+std::string Pawn::getImagePath() const
+{
+    std::string str1, str2 = "-pawn.png";
+
+    switch (getColor()) {
+        case (PieceColor::White):
+            str1 = "images/white";
+            break;
+        case (PieceColor::Black):
+            str1 = "images/black";
+            break;
+        case (PieceColor::Blank):
+        default:
+            str1 = "";
+            break;
+    }
+
+    return (str1 + str2);
+}
+

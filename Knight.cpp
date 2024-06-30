@@ -23,3 +23,23 @@ bool Knight::isValidMove(int src_row, int src_col, int trg_row, int trg_col) con
     return false;
 }
 
+std::string Knight::getImagePath() const
+{
+    std::string str1, str2 = "-knight.png";
+
+    switch (getColor()) {
+        case (PieceColor::White):
+            str1 = "images/white";
+            break;
+        case (PieceColor::Black):
+            str1 = "images/black";
+            break;
+        case (PieceColor::Blank):
+        default:
+            str1 = "";
+            break;
+    }
+
+    return (str1 + str2);
+}
+

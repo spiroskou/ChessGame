@@ -145,7 +145,7 @@ bool Board::isCheckmate(int turn_counter)
 					// Try to move the king to the target position and check if it's still in check
 					king = getKing(opp_color, dum_king_row, dum_king_col);
 					std::shared_ptr<Piece> tmp_piece = temp_replace(dum_king_row, dum_king_col, row, col);
-					bool still_in_check = isKingInCheck(king, dum_king_row, dum_king_col);
+					bool still_in_check = isKingInCheck(king, row, col);
 					// Undo the move
 					restore(dum_king_row, dum_king_col, row, col, tmp_piece);
 					if (!still_in_check) {

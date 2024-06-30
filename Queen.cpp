@@ -47,3 +47,24 @@ bool Queen::isPathClear(int src_row, int src_col, int trg_row, int trg_col) cons
 
     return true; // Path is clear
 }
+
+std::string Queen::getImagePath() const
+{
+    std::string str1, str2 = "-queen.png";
+
+    switch (getColor()) {
+        case (PieceColor::White):
+            str1 = "images/white";
+            break;
+        case (PieceColor::Black):
+            str1 = "images/black";
+            break;
+        case (PieceColor::Blank):
+        default:
+            str1 = "";
+            break;
+    }
+
+    return (str1 + str2);
+}
+

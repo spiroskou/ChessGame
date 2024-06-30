@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 enum class PieceType {Empty, Pawn, Knight, Bishop, Rook, Queen, King};
 enum class PieceColor {Blank, White, Black};
@@ -20,6 +21,7 @@ public:
 	void print() const;
 	virtual bool isValidMove(int src_row, int src_col, int trg_row, int trg_col) const { return false; };
 	bool isEmpty() const { return getType() == PieceType::Empty ? 1 : 0; };
+	virtual std::string getImagePath() const { return ""; };
 
 private:
 	PieceType m_type;

@@ -43,3 +43,23 @@ bool Bishop::isPathClear(int src_row, int src_col, int trg_row, int trg_col) con
 
     return true; // Path is clear
 }
+
+std::string Bishop::getImagePath() const
+{
+    std::string str1, str2 = "-bishop.png";
+
+    switch (getColor()) {
+        case (PieceColor::White):
+            str1 = "images/white";
+            break;
+        case (PieceColor::Black):
+            str1 = "images/black";
+            break;
+        case (PieceColor::Blank):
+        default:
+            str1 = "";
+            break;
+    }
+
+    return (str1 + str2);
+}
