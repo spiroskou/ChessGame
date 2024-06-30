@@ -9,6 +9,10 @@ bool Pawn::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
     int direction = (this->getColor() == PieceColor::White) ? 1 : -1;
     std::shared_ptr<Piece> trg_piece = board->getPiece(trg_row, trg_col);
 
+    if (src_row == trg_row && src_col == trg_col) {
+        return false;
+    }
+
     if (trg_piece->isEmpty()) {
         // Pawn can move forward one square
         if (trg_col == src_col && trg_row == src_row + direction) {

@@ -7,6 +7,10 @@ bool Bishop::isValidMove(int src_row, int src_col, int trg_row, int trg_col) con
 {
     std::shared_ptr<Board> board = getBoard();
 
+    if (src_row == trg_row && src_col == trg_col) {
+        return false;
+    }
+
     // Check if the bishop is moving diagonally
     if (std::abs(trg_row - src_row) == std::abs(trg_col - src_col)) {
         // Check if the path is clear

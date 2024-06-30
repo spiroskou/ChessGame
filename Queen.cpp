@@ -7,6 +7,10 @@ bool Queen::isValidMove(int src_row, int src_col, int trg_row, int trg_col) cons
 {
     std::shared_ptr<Board> board = getBoard();
 
+    if (src_row == trg_row && src_col == trg_col) {
+        return false;
+    }
+
     // Check if the queen is moving horizontally, vertically, or diagonally
     if (src_row == trg_row || src_col == trg_col || std::abs(trg_row - src_row) == std::abs(trg_col - src_col)) {
         // Check if the path is clear

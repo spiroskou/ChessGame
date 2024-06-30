@@ -7,6 +7,10 @@ bool Rook::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
 {
     std::shared_ptr<Board> board = getBoard();
 
+    if (src_row == trg_row && src_col == trg_col) {
+        return false;
+    }
+
     // Check if the rook is moving horizontally or vertically
     if (src_row == trg_row || src_col == trg_col) {
         // Check if the path is clear

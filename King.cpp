@@ -7,6 +7,10 @@ bool King::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
 {
     std::shared_ptr<Board> board = getBoard();
 
+    if (src_row == trg_row && src_col == trg_col) {
+        return false;
+    }
+
     // Check if the target block is within one square of the king's position
     if (std::abs(trg_row - src_row) <= 1 && std::abs(trg_col - src_col) <= 1) {
         // Check if the target block is empty or contains an opponent's piece

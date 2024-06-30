@@ -7,6 +7,10 @@ bool Knight::isValidMove(int src_row, int src_col, int trg_row, int trg_col) con
 {
     std::shared_ptr<Board> board = getBoard();
 
+    if (src_row == trg_row && src_col == trg_col) {
+        return false;
+    }
+
     // Calculate the absolute difference in rows and columns
     int row_diff = std::abs(trg_row - src_row);
     int col_diff = std::abs(trg_col - src_col);

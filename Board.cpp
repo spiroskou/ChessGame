@@ -156,6 +156,29 @@ bool Board::isCheckmate(int turn_counter)
 		}
 	}
 
+	// Check if any piece can block the check or capture the attacking piece
+	for (int row = 0; row < 8; ++row) {
+		for (int col = 0; col < 8; ++col) {
+			std::shared_ptr<Piece> piece = getPiece(row, col);
+			if (piece->getColor() == opp_color) {
+				// Check all possible moves for this piece
+				for (int target_row = 0; target_row < 8; ++target_row) {
+					for (int target_col = 0; target_col < 8; ++target_col) {
+						if (piece->isValidMove(row, col, target_row, target_col)) {
+							std::shared_ptr<Piece> tmp_piece = temp_replace(row, col, target_row, target_col);
+							bool still_in_check = isKingInCheck(king, king_row, king_col);
+							// Undo the move
+							restore(row, col, target_row, target_col, tmp_piece);
+							if (!still_in_check) {
+								return false; // There is a piece that can block the check or capture the attacker
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// If the king has no legal moves to escape check, it's checkmate
 	return true;
 
