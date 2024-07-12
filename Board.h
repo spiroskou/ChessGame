@@ -8,6 +8,13 @@
 #include "Queen.h"
 #include "King.h"
 
+enum class MoveResult {
+    InvalidPosition = 0,
+    OpponentPiece,
+    InvalidMove,
+    ValidMove
+};
+
 class Board
 {
 private:
@@ -26,7 +33,7 @@ public:
     } } {};
 
     void print();
-    bool move(int src_row, int src_col, int trg_row, int trg_col);
+    MoveResult move(int src_row, int src_col, int trg_row, int trg_col);
     void replace(int src_row, int src_col, int trg_row, int trg_col);
     std::shared_ptr<Piece> temp_replace(int src_row, int src_col, int trg_row, int trg_col);
     void restore(int src_row, int src_col, int trg_row, int trg_col, std::shared_ptr<Piece> tmp_piece);
@@ -41,3 +48,5 @@ public:
 std::shared_ptr<Board> getBoard();
 void IncrementTurnCounter();
 int getTurnCounter();
+MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col);
+bool boardIsCheckmate();

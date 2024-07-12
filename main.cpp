@@ -12,7 +12,6 @@ int main(int argc, char* args[])
         return 1;
     }
 
-    std::shared_ptr<Board> board = getBoard();
     bool quit = false;
     SDL_Event e;
     int print = 0;
@@ -49,18 +48,13 @@ int main(int argc, char* args[])
                     click_counter = 0;
                     print = 0;
 
-                    // Make the move
-                    bool res = board->move(src_row, src_col, dest_row, dest_col);
+                    MoveResult res = makeTheMove(src_row, src_col, dest_row, dest_col);
 
-                    // Check if the move was valid and proceed to the next round
-                    if (res == true) {
-                        std::cout << "Move from (" << src_row << ", " << src_col << ") to (" << dest_row << ", " << dest_col << ")" << std::endl;
-                    } else {
-                        std::cout << "Invalid Move. Try again" << std::endl;
+                    if (res != MoveResult::ValidMove) {
                         continue;
                     }
 
-                    if (board->isCheckmate()) {
+                    if (boardIsCheckmate()) {
                         renderChessBoard();
 
                         showWinningMessage();

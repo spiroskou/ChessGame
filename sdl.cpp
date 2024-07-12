@@ -150,10 +150,21 @@ SDL_Window* getWindow()
 
 void showWinningMessage()
 {
-    SDL_Window* window = getWindow();
 	std::string winner = (getTurnCounter() % 2 != 0) ? "Player1 (White)" : "Player2 (Black)";
 	std::string message = "Checkmate! " + winner + " has won the game!";
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", message.c_str(), window);
+}
+
+void showOpponentPieceMessage()
+{
+	std::string message = "You can't move an opponent's piece!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
+}
+
+void showInvalidMoveMessage()
+{
+	std::string message = "Invalid move!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
 }
 
 void renderChessBoard() 
