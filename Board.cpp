@@ -4,7 +4,18 @@
 #include <windows.h>
 #include <memory>
 
-std::shared_ptr<Board> board = std::make_shared<Board>();
+static std::shared_ptr<Board> board = std::make_shared<Board>();
+static int turn_counter = 1;
+
+int getTurnCounter()
+{
+	return turn_counter;
+}
+
+void IncrementTurnCounter()
+{
+	turn_counter++;
+}
 
 std::shared_ptr<Board> getBoard()
 {
@@ -120,8 +131,9 @@ bool Board::isKingInCheck(std::shared_ptr<King> king, int king_row, int king_col
 	return false; // King is not in check
 }
 
-bool Board::isCheckmate(int turn_counter)
+bool Board::isCheckmate()
 {
+	int turn_counter = getTurnCounter();
 	PieceColor opp_color = getOpponentColor(turn_counter);
 
 	int king_row = -1, king_col = -1;

@@ -45,6 +45,9 @@
     <ClCompile Include="Rook.cpp">
       <Filter>Pieces</Filter>
     </ClCompile>
+    <ClCompile Include="sdl.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bishop.h">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="Board.h">
       <Filter>Board</Filter>
+    </ClInclude>
+    <ClInclude Include="sdl.h">
+      <Filter>main</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

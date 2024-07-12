@@ -33,9 +33,11 @@ public:
     bool isValidPosition(int row, int col);
     std::shared_ptr<Piece> getPiece(int row, int col) const { return m_layout[row][col]; };
     void setPiece(int row, int col, std::shared_ptr<Piece> piece) { m_layout[row][col] = piece; };
-    bool isCheckmate(int turn_counter);
+    bool isCheckmate();
     std::shared_ptr<King> getKing(PieceColor color, int& king_row, int& king_col);
     bool isKingInCheck(std::shared_ptr<King> king, int king_row, int king_col) const;
 };
 
 std::shared_ptr<Board> getBoard();
+void IncrementTurnCounter();
+int getTurnCounter();
