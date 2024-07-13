@@ -16,6 +16,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="SDL">
+      <UniqueIdentifier>{b4a6f9cf-a0f7-4d57-a28c-cb54a82e51f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,7 +49,7 @@
       <Filter>Pieces</Filter>
     </ClCompile>
     <ClCompile Include="sdl.cpp">
-      <Filter>main</Filter>
+      <Filter>SDL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +78,7 @@
       <Filter>Board</Filter>
     </ClInclude>
     <ClInclude Include="sdl.h">
-      <Filter>main</Filter>
+      <Filter>SDL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

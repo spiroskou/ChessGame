@@ -12,6 +12,7 @@ enum class MoveResult {
     InvalidPosition = 0,
     OpponentPiece,
     InvalidMove,
+    KingInCheck,
     ValidMove
 };
 

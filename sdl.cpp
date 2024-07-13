@@ -167,6 +167,12 @@ void showInvalidMoveMessage()
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
 }
 
+void showKingInCheckMessage()
+{
+	std::string message = "King is in check! Choose a valid move!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
+}
+
 void renderChessBoard() 
 {
     SDL_Renderer* renderer = getRenderer();

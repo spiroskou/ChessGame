@@ -16,4 +16,5 @@ void close();
 void showWinningMessage();
 void showOpponentPieceMessage();
 void showInvalidMoveMessage();
+void showKingInCheckMessage();
 void renderChessBoard();

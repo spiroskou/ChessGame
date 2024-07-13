@@ -62,13 +62,22 @@ void Board::restore(int src_row, int src_col, int trg_row, int trg_col, std::sha
 	setPiece(src_row, src_col, dest_piece);
 }
 
-static PieceColor getOpponentColor(int turn_counter)
+static PieceColor getOpponentColor()
 {
 	if (turn_counter % 2 != 0) {
 		return PieceColor::Black;
 	}
 
 	return PieceColor::White;
+}
+
+static PieceColor getColor()
+{
+	if (turn_counter % 2 != 0) {
+		return PieceColor::White;
+	}
+
+	return PieceColor::Black;
 }
 
 MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
@@ -79,7 +88,7 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 	}
 
 	// Check if the player chose opponent's piece
-	PieceColor opp_color = getOpponentColor(getTurnCounter());
+	PieceColor opp_color = getOpponentColor();
 	if (getPiece(src_row, src_col)->getColor() == opp_color) {
 		return MoveResult::OpponentPiece;
 	}
@@ -92,29 +101,6 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 	replace(src_row, src_col, trg_row, trg_col);
 	
 	return MoveResult::ValidMove;
-}
-
-MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col)
-{
-	MoveResult res = board->move(src_row, src_col, trg_row, trg_col);
-
-	switch (res)
-	{
-	case MoveResult::InvalidPosition:
-		break;
-	case MoveResult::OpponentPiece:
-		showOpponentPieceMessage();
-		break;
-	case MoveResult::InvalidMove:
-		showInvalidMoveMessage();
-		break;
-	case MoveResult::ValidMove:
-		break;
-	default:
-		break;
-	}
-
-	return res;
 }
 
 std::shared_ptr<King> Board::getKing(PieceColor color, int &king_row, int& king_col)
@@ -161,6 +147,42 @@ bool Board::isKingInCheck(std::shared_ptr<King> king, int king_row, int king_col
 	return false; // King is not in check
 }
 
+MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col)
+{
+	MoveResult res = board->move(src_row, src_col, trg_row, trg_col);
+
+	int king_row = 0;
+	int king_col = 0;
+	PieceColor color = PieceColor::Blank;
+	std::shared_ptr<King> king = board->getKing(getColor(), king_row, king_col);
+	if (board->isKingInCheck(king, king_row, king_col)) {
+		res = MoveResult::KingInCheck;
+		std::shared_ptr<Piece> tmp_piece = board->getPiece(src_row, src_col);
+		board->restore(src_row, src_col, trg_row, trg_col, tmp_piece);
+	}
+
+	switch (res)
+	{
+	case MoveResult::InvalidPosition:
+		break;
+	case MoveResult::OpponentPiece:
+		showOpponentPieceMessage();
+		break;
+	case MoveResult::InvalidMove:
+		showInvalidMoveMessage();
+		break;
+	case MoveResult::KingInCheck:
+		showKingInCheckMessage();
+		break;
+	case MoveResult::ValidMove:
+		break;
+	default:
+		break;
+	}
+
+	return res;
+}
+
 bool boardIsCheckmate()
 {
 	return board->isCheckmate();
@@ -168,8 +190,7 @@ bool boardIsCheckmate()
 
 bool Board::isCheckmate()
 {
-	int turn_counter = getTurnCounter();
-	PieceColor opp_color = getOpponentColor(turn_counter);
+	PieceColor opp_color = getOpponentColor();
 
 	int king_row = -1, king_col = -1;
 	std::shared_ptr<King> king = getKing(opp_color, king_row, king_col);
