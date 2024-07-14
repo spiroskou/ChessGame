@@ -183,6 +183,15 @@ MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col)
 	return res;
 }
 
+void checkForPromotion(int dest_row, int dest_col)
+{
+	std::shared_ptr<Piece> tmp_piece = board->getPiece(dest_row, dest_col);
+
+	if (tmp_piece->getType() == PieceType::Pawn && (dest_row == 0 || dest_row == 7)) {
+		board->setPiece(dest_row, dest_col, std::make_shared<Queen>(getColor()));
+	}
+}
+
 bool boardIsCheckmate()
 {
 	return board->isCheckmate();

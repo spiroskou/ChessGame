@@ -54,6 +54,8 @@ int main(int argc, char* args[])
                         continue;
                     }
 
+                    checkForPromotion(dest_row, dest_col);
+
                     if (boardIsCheckmate()) {
                         renderChessBoard();
 
