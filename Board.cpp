@@ -300,7 +300,6 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 	if (board->isKingInCheck(getColor())) {
 		std::shared_ptr<Piece> tmp_piece = board->getPiece(src_row, src_col);
 		board->restore(src_row, src_col, trg_row, trg_col, tmp_piece);
-		src_piece->setMoved(false);
 		return MoveResult::KingInCheck;
 	}
 
