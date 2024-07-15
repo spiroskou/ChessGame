@@ -295,7 +295,6 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 	}
 
 	replace(src_row, src_col, trg_row, trg_col);
-	src_piece->setMoved(true);
 	
 	if (board->isKingInCheck(getColor())) {
 		std::shared_ptr<Piece> tmp_piece = board->getPiece(src_row, src_col);
@@ -307,6 +306,7 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 		return MoveResult::Checkmate;
 	}
 
+	src_piece->setMoved(true);
 	return MoveResult::ValidMove;
 }
 
