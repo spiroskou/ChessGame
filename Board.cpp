@@ -163,13 +163,13 @@ bool Board::isKingInCheck(PieceColor color) const
 	return false; // King is not in check
 }
 
-static int checkForPromotion(int dest_row, int dest_col)
+int Board::checkForPromotion(int dest_row, int dest_col)
 {
-	std::shared_ptr<Piece> tmp_piece = board->getPiece(dest_row, dest_col);
+	std::shared_ptr<Piece> tmp_piece = getPiece(dest_row, dest_col);
 	if (!tmp_piece) return 0;
 
 	if (tmp_piece->getType() == PieceType::Pawn && (dest_row == 0 || dest_row == 7)) {
-		board->setPiece(dest_row, dest_col, std::make_shared<Queen>(getColor()));
+		setPiece(dest_row, dest_col, std::make_shared<Queen>(getColor()));
 		return 1;
 	}
 
@@ -296,14 +296,20 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 
 	replace(src_row, src_col, trg_row, trg_col);
 	
-	if (board->isKingInCheck(getColor())) {
-		std::shared_ptr<Piece> tmp_piece = board->getPiece(src_row, src_col);
-		board->restore(src_row, src_col, trg_row, trg_col, tmp_piece);
+	if (isKingInCheck(getColor())) {
+		std::shared_ptr<Piece> tmp_piece = getPiece(src_row, src_col);
+		restore(src_row, src_col, trg_row, trg_col, tmp_piece);
 		return MoveResult::KingInCheck;
 	}
 
-	if (board->isCheckmate()) {
+	if (isCheckmate()) {
 		return MoveResult::Checkmate;
+	}
+
+	if (checkForPromotion(trg_row, trg_col)) {
+		if (isCheckmate()) {
+			return MoveResult::Checkmate;
+		}
 	}
 
 	src_piece->setMoved(true);
@@ -312,17 +318,6 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 
 MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col)
 {
-	MoveResult res = board->move(src_row, src_col, trg_row, trg_col);
-
-	if (res == MoveResult::ValidMove) {
-		int promoted = checkForPromotion(trg_row, trg_col);
-		if (promoted) {
-			if (board->isCheckmate()) {
-				res = MoveResult::Checkmate;
-			}
-		}
-	}
-
-	return res;
+	return board->move(src_row, src_col, trg_row, trg_col);
 }
 

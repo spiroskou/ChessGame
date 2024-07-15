@@ -45,6 +45,7 @@ public:
     bool isKingInCheck(PieceColor color) const;
     bool isSquareAttacked(int row, int col, PieceColor color) const;
     void performCastling(int src_row, int src_col, int trg_row, int trg_col);
+    int checkForPromotion(int dest_row, int dest_col);
 };
 
 std::shared_ptr<Board> getBoard();
