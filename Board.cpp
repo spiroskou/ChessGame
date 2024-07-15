@@ -83,37 +83,36 @@ void Board::restore(int src_row, int src_col, int trg_row, int trg_col, std::sha
 	setPiece(src_row, src_col, dest_piece);
 }
 
-MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
+bool Board::isSquareAttacked(int row, int col, PieceColor color) const 
 {
-	// Check if the player chose a piece
-	if (!getPiece(src_row, src_col)) {
-		return MoveResult::InvalidPiece;
+	PieceColor opponentColor = getOpponentColor();
+
+	// Iterate over all squares on the board
+	for (int i = 0; i < 8; ++i) {
+		for (int j = 0; j < 8; ++j) {
+			auto piece = getPiece(i, j);
+
+			// If the piece is null or not an opponent's piece, continue
+			if (!piece || piece->getColor() != opponentColor) {
+				continue;
+			}
+
+			// Handle pawn's attack moves separately
+			if (piece->getType() == PieceType::Pawn) {
+				int direction = (piece->getColor() == PieceColor::White) ? 1 : -1;
+				if (i + direction == row && (j - 1 == col || j + 1 == col)) {
+					return true;
+				}
+			} else {
+				// Check if the piece can move to (row, col)
+				if (piece->isValidMove(i, j, row, col)) {
+					return true;
+				}
+			}
+		}
 	}
 
-	// Check if the player chose opponent's piece
-	PieceColor opp_color = getOpponentColor();
-	if (getPiece(src_row, src_col)->getColor() == opp_color) {
-		return MoveResult::OpponentPiece;
-	}
-	
-	// Check if the player chose a valid move for the corresponding Piece
-	if (!getPiece(src_row, src_col)->isValidMove(src_row, src_col, trg_row, trg_col)) {
-		return MoveResult::InvalidMove;
-	}
-
-	replace(src_row, src_col, trg_row, trg_col);
-	
-	if (board->isKingInCheck(getColor())) {
-		std::shared_ptr<Piece> tmp_piece = board->getPiece(src_row, src_col);
-		board->restore(src_row, src_col, trg_row, trg_col, tmp_piece);
-		return MoveResult::KingInCheck;
-	}
-
-	if (board->isCheckmate()) {
-		return MoveResult::Checkmate;
-	}
-
-	return MoveResult::ValidMove;
+	return false;
 }
 
 std::shared_ptr<King> Board::getKing(PieceColor color, int &king_row, int& king_col) const
@@ -175,22 +174,6 @@ static int checkForPromotion(int dest_row, int dest_col)
 	}
 
 	return 0;
-}
-
-MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col)
-{
-	MoveResult res = board->move(src_row, src_col, trg_row, trg_col);
-
-	if (res == MoveResult::ValidMove) {
-		int promoted = checkForPromotion(trg_row, trg_col);
-		if (promoted) {
-			if (board->isCheckmate()) {
-				res = MoveResult::Checkmate;
-			}
-		}
-	}
-
-	return res;
 }
 
 bool Board::isCheckmate()
@@ -267,3 +250,80 @@ bool Board::isCheckmate()
 	return true;
 
 }
+
+void Board::performCastling(int src_row, int src_col, int trg_row, int trg_col) 
+{
+	// Perform the castling move
+	int rook_col = (trg_col == 6) ? 7 : 0;
+	int new_rook_col = (trg_col == 6) ? 5 : 3;
+
+	auto king = getPiece(src_row, src_col);
+	auto rook = getPiece(src_row, rook_col);
+
+	replace(src_row, src_col, trg_row, trg_col); // Move the king
+	replace(src_row, rook_col, trg_row, new_rook_col); // Move the rook
+}
+
+MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
+{
+	auto src_piece = getPiece(src_row, src_col);
+
+	// Check if the player chose a piece
+	if (!src_piece) {
+		return MoveResult::InvalidPiece;
+	}
+
+	// Check if the player chose opponent's piece
+	PieceColor opp_color = getOpponentColor();
+	if (src_piece->getColor() == opp_color) {
+		return MoveResult::OpponentPiece;
+	}
+
+	// Handle castling move
+	if (src_piece->getType() == PieceType::King) {
+		std::shared_ptr<King> king = std::static_pointer_cast<King> (src_piece);
+		if (king->canCastle(src_row, src_col, trg_row, trg_col)) {
+			performCastling(src_row, src_col, trg_row, trg_col);
+			king->setMoved(true);
+			return MoveResult::ValidMove;
+		}
+	}
+
+	// Check if the player chose a valid move for the corresponding Piece
+	if (!getPiece(src_row, src_col)->isValidMove(src_row, src_col, trg_row, trg_col)) {
+		return MoveResult::InvalidMove;
+	}
+
+	replace(src_row, src_col, trg_row, trg_col);
+	src_piece->setMoved(true);
+	
+	if (board->isKingInCheck(getColor())) {
+		std::shared_ptr<Piece> tmp_piece = board->getPiece(src_row, src_col);
+		board->restore(src_row, src_col, trg_row, trg_col, tmp_piece);
+		src_piece->setMoved(false);
+		return MoveResult::KingInCheck;
+	}
+
+	if (board->isCheckmate()) {
+		return MoveResult::Checkmate;
+	}
+
+	return MoveResult::ValidMove;
+}
+
+MoveResult makeTheMove(int src_row, int src_col, int trg_row, int trg_col)
+{
+	MoveResult res = board->move(src_row, src_col, trg_row, trg_col);
+
+	if (res == MoveResult::ValidMove) {
+		int promoted = checkForPromotion(trg_row, trg_col);
+		if (promoted) {
+			if (board->isCheckmate()) {
+				res = MoveResult::Checkmate;
+			}
+		}
+	}
+
+	return res;
+}
+

@@ -17,7 +17,7 @@ bool Pawn::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
         // Pawn can move forward one square
         if (trg_col == src_col && trg_row == src_row + direction) {
             return true;
-        } else if (trg_col == src_col && trg_row == src_row + 2 * direction && getFirstMove()) { 
+        } else if (trg_col == src_col && trg_row == src_row + 2 * direction && !hasMoved()) { 
             // Pawn can move forward two squares from its starting position
 
             // Check if the path is clear (no pieces in the way)

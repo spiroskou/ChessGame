@@ -23,6 +23,38 @@ bool King::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
     return false;
 }
 
+bool King::canCastle(int src_row, int src_col, int trg_row, int trg_col) const
+{
+    if (abs(trg_col - src_col) != 2 || trg_row != src_row) {
+        return false;
+    }
+
+    // Determine the direction of castling
+    int rook_col = (trg_col == 6) ? 7 : 0;
+    std::shared_ptr<Board> board = getBoard();
+    auto rook = board->getPiece(src_row, rook_col);
+    if (!rook || rook->getType() != PieceType::Rook || rook->hasMoved()) {
+        return false;
+    }
+
+    // Check that there are no pieces between the king and the rook
+    int direction = (trg_col - src_col) / 2;
+    for (int col = src_col + direction; col != trg_col; col += direction) {
+        if (board->getPiece(src_row, col)) {
+            return false;
+        }
+    }
+
+    // Ensure the king is not in check, and does not pass through or land in a square that is under attack
+    for (int col = src_col; col != trg_col + direction; col += direction) {
+        if (board->isSquareAttacked(src_row, col, getColor())) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 std::string King::getImagePath() const
 {
     std::string str1, str2 = "-king.png";

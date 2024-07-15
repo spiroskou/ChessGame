@@ -43,6 +43,8 @@ public:
     bool isCheckmate();
     std::shared_ptr<King> getKing(PieceColor color, int& king_row, int& king_col) const;
     bool isKingInCheck(PieceColor color) const;
+    bool isSquareAttacked(int row, int col, PieceColor color) const;
+    void performCastling(int src_row, int src_col, int trg_row, int trg_col);
 };
 
 std::shared_ptr<Board> getBoard();
