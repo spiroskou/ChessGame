@@ -3,7 +3,7 @@
 #include <string>
 #include <SDL.h>
 #include <SDL_image.h>
-#include "sdl.h"
+#include "ChessSDL.h"
 #include <vector>
 #include <memory>
 #include "Board.h"
@@ -12,7 +12,22 @@ static std::map<std::string, SDL_Texture*> textures;
 static SDL_Renderer* renderer;
 static SDL_Window* window;
 
-int init_SDL()
+static SDL_Texture* getTexture(std::string imagePath)
+{
+    return textures[imagePath];
+}
+
+static SDL_Renderer* getRenderer()
+{
+    return renderer;
+}
+
+static SDL_Window* getWindow()
+{
+    return window;
+}
+
+static int init_SDL()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
@@ -21,7 +36,7 @@ int init_SDL()
     return 0;
 }
 
-int init_SDL_Image()
+static int init_SDL_Image()
 {
     if (!IMG_Init(IMG_INIT_PNG)) {
         std::cerr << "SDL_image could not initialize! SDL_image Error: " << IMG_GetError() << std::endl;
@@ -31,7 +46,7 @@ int init_SDL_Image()
     return 0;
 }
 
-SDL_Window* create_SDL_Window(std::string name)
+static SDL_Window* create_SDL_Window(std::string name)
 {
     SDL_Window* window = SDL_CreateWindow(name.c_str(),
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -46,7 +61,7 @@ SDL_Window* create_SDL_Window(std::string name)
     return window;
 }
 
-SDL_Renderer* create_SDL_Renderer(SDL_Window *window)
+static SDL_Renderer* create_SDL_Renderer(SDL_Window *window)
 {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
@@ -59,7 +74,7 @@ SDL_Renderer* create_SDL_Renderer(SDL_Window *window)
     return renderer;
 }
 
-bool loadMedia(SDL_Renderer* renderer) {
+static bool loadMedia(SDL_Renderer* renderer) {
     // Load images for all piece types
     std::vector<std::string> Files = {
         "images/white-pawn.png",
@@ -93,7 +108,7 @@ bool loadMedia(SDL_Renderer* renderer) {
     return true;
 }
 
-void close() 
+void ChessSDL_Close() 
 {
     for (auto& pair : textures) {
         SDL_DestroyTexture(pair.second);
@@ -103,7 +118,7 @@ void close()
     SDL_Quit();
 }
 
-int makeSDLPreparations()
+int ChessSDL_MakePreparations()
 {
     if (init_SDL()) {
         return 1;
@@ -123,57 +138,16 @@ int makeSDLPreparations()
         return 1;
     }
 
-    // Load media
     if (!loadMedia(renderer)) {
         std::cerr << "Failed to load media!" << std::endl;
-        close();
+        ChessSDL_Close();
         return 1;
     }
 
     return 0;
 }
 
-SDL_Texture* getTexture(std::string imagePath)
-{
-    return textures[imagePath];
-}
-
-SDL_Renderer* getRenderer()
-{
-    return renderer;
-}
-
-SDL_Window* getWindow()
-{
-    return window;
-}
-
-void showWinningMessage()
-{
-	std::string winner = (getTurnCounter() % 2 != 0) ? "Player1 (White)" : "Player2 (Black)";
-	std::string message = "Checkmate! " + winner + " has won the game!";
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", message.c_str(), window);
-}
-
-void showOpponentPieceMessage()
-{
-	std::string message = "You can't move an opponent's piece!";
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
-}
-
-void showInvalidMoveMessage()
-{
-	std::string message = "Invalid move!";
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
-}
-
-void showKingInCheckMessage()
-{
-	std::string message = "King is in check! Choose a valid move!";
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
-}
-
-void renderChessBoard() 
+void ChessSDL_RenderChessBoard() 
 {
     SDL_Renderer* renderer = getRenderer();
 
@@ -198,7 +172,6 @@ void renderChessBoard()
             std::shared_ptr<Piece> piece = board->getPiece(row, col);
             if (piece) {
                 std::string imagePath;
-                if (piece->isEmpty()) continue;
                 
                 imagePath = piece->getImagePath();
                 SDL_Texture* texture = getTexture(imagePath);
@@ -214,3 +187,53 @@ void renderChessBoard()
 	SDL_RenderPresent(renderer);
 }
 
+static void showCheckmateMessage()
+{
+	std::string winner = (getTurnCounter() % 2 != 0) ? "Player1 (White)" : "Player2 (Black)";
+	std::string message = "Checkmate! " + winner + " has won the game!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", message.c_str(), window);
+}
+
+static void showOpponentPieceMessage()
+{
+	std::string message = "You can't move an opponent's piece!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
+}
+
+static void showInvalidMoveMessage()
+{
+	std::string message = "Invalid move!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
+}
+
+static void showKingInCheckMessage()
+{
+	std::string message = "King is in check! Choose a valid move!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Warning", message.c_str(), window);
+}
+
+void ChessSDL_ShowMoveMessage(MoveResult res)
+{
+	switch (res)
+	{
+	case MoveResult::InvalidPiece:
+		break;
+	case MoveResult::OpponentPiece:
+		showOpponentPieceMessage();
+		break;
+	case MoveResult::InvalidMove:
+		showInvalidMoveMessage();
+		break;
+	case MoveResult::KingInCheck:
+		showKingInCheckMessage();
+		break;
+	case MoveResult::Checkmate:
+		showCheckmateMessage();
+		break;
+	case MoveResult::ValidMove:
+		break;
+	default:
+		break;
+	}
+
+}

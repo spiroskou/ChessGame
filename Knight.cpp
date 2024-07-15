@@ -19,7 +19,7 @@ bool Knight::isValidMove(int src_row, int src_col, int trg_row, int trg_col) con
     if ((row_diff == 2 && col_diff == 1) || (row_diff == 1 && col_diff == 2)) {
         // Check if the target block is empty or contains an opponent's piece
         std::shared_ptr<Piece> trg_piece = board->getPiece(trg_row, trg_col);
-        if (trg_piece->isEmpty() || trg_piece->getColor() != this->getColor()) {
+        if (!trg_piece || trg_piece->getColor() != this->getColor()) {
             return true;
         }
     }

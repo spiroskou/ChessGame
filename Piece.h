@@ -19,9 +19,7 @@ public:
 	const PieceColor& getColor() const { return m_color; };
 	const PieceType& getType() const { return m_type; };
 	void setType(PieceType type) { m_type = type; };
-	void print() const;
 	virtual bool isValidMove(int src_row, int src_col, int trg_row, int trg_col) const { return false; };
-	bool isEmpty() const { return getType() == PieceType::Empty ? 1 : 0; };
 	virtual std::string getImagePath() const { return ""; };
 
 private:

@@ -1,14 +1,12 @@
 #include <SDL.h>
-#include <SDL_image.h>
 #include <iostream>
 #include <string>
-#include <memory>
 #include "Board.h"
-#include "sdl.h"
+#include "ChessSDL.h"
 
 int main(int argc, char* args[]) 
 {
-    if (makeSDLPreparations()) {
+    if (ChessSDL_MakePreparations()) {
         return 1;
     }
 
@@ -50,28 +48,24 @@ int main(int argc, char* args[])
 
                     MoveResult res = makeTheMove(src_row, src_col, dest_row, dest_col);
 
-                    if (res != MoveResult::ValidMove) {
-                        continue;
-                    }
-
-                    checkForPromotion(dest_row, dest_col);
-
-                    if (boardIsCheckmate()) {
-                        renderChessBoard();
-
-                        showWinningMessage();
+                    if (res == MoveResult::Checkmate) {
+                        ChessSDL_RenderChessBoard();
+                        ChessSDL_ShowMoveMessage(res);
                         quit = true;
                         break;
                     }
 
-                    IncrementTurnCounter();
+                    if (res == MoveResult::ValidMove) {
+                        IncrementTurnCounter();
+                    }
+                    ChessSDL_ShowMoveMessage(res);
                 }
             }
         }
 
-        renderChessBoard();
+        ChessSDL_RenderChessBoard();
     }
 
-    close();
+    ChessSDL_Close();
     return 0;
 }

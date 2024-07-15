@@ -13,7 +13,7 @@ bool Pawn::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
         return false;
     }
 
-    if (trg_piece->isEmpty()) {
+    if (!trg_piece) {
         // Pawn can move forward one square
         if (trg_col == src_col && trg_row == src_row + direction) {
             return true;
@@ -21,13 +21,14 @@ bool Pawn::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
             // Pawn can move forward two squares from its starting position
 
             // Check if the path is clear (no pieces in the way)
-            if (board->getPiece(src_row + direction, src_col)->isEmpty()) {
+            if (!board->getPiece(src_row + direction, src_col)) {
                 return true;
             }
         }
     } else {
         // Check if the destination block contains an opponent's piece
-        if (board->getPiece(trg_row, trg_col)->getColor() != this->getColor()) {
+        std::shared_ptr<Piece> piece = board->getPiece(trg_row, trg_col);
+        if (piece && (piece->getColor() != this->getColor())) {
             // Pawn can capture diagonally
             if (std::abs(trg_col - src_col) == 1 && trg_row == src_row + direction) {
                 return true;

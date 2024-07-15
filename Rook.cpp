@@ -17,7 +17,7 @@ bool Rook::isValidMove(int src_row, int src_col, int trg_row, int trg_col) const
         if (isPathClear(src_row, src_col, trg_row, trg_col)) {
             // Check if the target block is empty or contains an opponent's piece
             std::shared_ptr<Piece> trg_piece = board->getPiece(trg_row, trg_col);
-            if (trg_piece->getType() == PieceType::Empty || trg_piece->getColor() != this->getColor()) {
+            if (!trg_piece || trg_piece->getColor() != this->getColor()) {
                 return true;
             }
         }
@@ -35,7 +35,7 @@ bool Rook::isPathClear(int src_row, int src_col, int trg_row, int trg_col) const
         int start_col = std::min(src_col, trg_col);
         int end_col = std::max(src_col, trg_col);
         for (int col = start_col + 1; col < end_col; ++col) {
-            if (!board->getPiece(src_row, col)->isEmpty()) {
+            if (board->getPiece(src_row, col)) {
                 return false; // Path is pieceed
             }
         }
@@ -45,7 +45,7 @@ bool Rook::isPathClear(int src_row, int src_col, int trg_row, int trg_col) const
         int start_row = std::min(src_row, trg_row);
         int end_row = std::max(src_row, trg_row);
         for (int row = start_row + 1; row < end_row; ++row) {
-            if (!board->getPiece(row, src_col)->isEmpty()) {
+            if (board->getPiece(row, src_col)) {
                 return false; // Path is pieceed
             }
         }
