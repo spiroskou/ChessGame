@@ -83,6 +83,64 @@ void Board::restore(int src_row, int src_col, int trg_row, int trg_col, std::sha
 	setPiece(src_row, src_col, dest_piece);
 }
 
+Move Board::getLastMove() const 
+{
+	if (moveHistory.empty()) {
+		return Move{ -1, -1, -1, -1 }; // Return an invalid move if no moves have been made
+	}
+	return moveHistory.back();
+}
+
+static bool isDoubleStep(Move& move)
+{
+	int rowDiff = abs(move.dest_row - move.src_row);
+	if (rowDiff == 2) {
+		return true;
+	}
+	return false;
+}
+
+bool Board::isEnPassant(int src_row, int src_col, int trg_row, int trg_col) const 
+{
+	auto pawn = getPiece(src_row, src_col);
+	if (pawn->getType() != PieceType::Pawn) {
+		return false;
+	}
+
+	// Check if the move is a valid en passant capture
+	int direction = (pawn->getColor() == PieceColor::White) ? 1 : -1;
+	if (abs(trg_col - src_col) == 1 && trg_row == src_row + direction) {
+		auto target_pawn = getPiece(src_row, trg_col);
+		if (target_pawn && target_pawn->getType() == PieceType::Pawn && target_pawn->getColor() != pawn->getColor()) {
+			// Ensure the target pawn just moved two squares in the last turn
+			Move move = getLastMove();
+			if (isDoubleStep(move)) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+void Board::removePiece(int row, int col) 
+{
+	m_layout[row][col] = nullptr;
+}
+
+void Board::performEnPassant(int src_row, int src_col, int trg_row, int trg_col) 
+{
+	auto pawn = getPiece(src_row, src_col);
+	int direction = (pawn->getColor() == PieceColor::White) ? 1 : -1;
+
+	// Capture the target pawn
+	auto target_pawn = getPiece(src_row, trg_col);
+	removePiece(src_row, trg_col);
+
+	// Move the capturing pawn to the target square
+	replace(src_row, src_col, trg_row, trg_col);
+}
+
 bool Board::isSquareAttacked(int row, int col, PieceColor color) const 
 {
 	PieceColor opponentColor = getOpponentColor();
@@ -285,6 +343,19 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 		if (king->canCastle(src_row, src_col, trg_row, trg_col)) {
 			performCastling(src_row, src_col, trg_row, trg_col);
 			king->setMoved(true);
+			Move move{ src_row, src_col, trg_row, trg_col };
+			moveHistory.push_back(move);
+			return MoveResult::ValidMove;
+		}
+	}
+
+	// Handle EnPassant move
+	if (src_piece->getType() == PieceType::Pawn) {
+		if (isEnPassant(src_row, src_col, trg_row, trg_col)) {
+			performEnPassant(src_row, src_col, trg_row, trg_col);
+			src_piece->setMoved(true);
+			Move move{ src_row, src_col, trg_row, trg_col };
+			moveHistory.push_back(move);
 			return MoveResult::ValidMove;
 		}
 	}
@@ -294,10 +365,9 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 		return MoveResult::InvalidMove;
 	}
 
-	replace(src_row, src_col, trg_row, trg_col);
+	std::shared_ptr<Piece> tmp_piece = replace(src_row, src_col, trg_row, trg_col);
 	
 	if (isKingInCheck(getColor())) {
-		std::shared_ptr<Piece> tmp_piece = getPiece(src_row, src_col);
 		restore(src_row, src_col, trg_row, trg_col, tmp_piece);
 		return MoveResult::KingInCheck;
 	}
@@ -313,6 +383,9 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 	}
 
 	src_piece->setMoved(true);
+	Move move{ src_row, src_col, trg_row, trg_col };
+	moveHistory.push_back(move);
+
 	return MoveResult::ValidMove;
 }
 

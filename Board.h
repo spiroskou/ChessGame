@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+#include <vector>
 #include "Knight.h"
 #include "Rook.h"
 #include "Pawn.h"
@@ -18,10 +19,16 @@ enum class MoveResult {
     ValidMove
 };
 
+struct Move {
+    int src_row, src_col;
+    int dest_row, dest_col;
+};
+
 class Board
 {
 private:
 	std::array<std::array<std::shared_ptr<Piece>, 8>, 8> m_layout;
+    std::vector<Move> moveHistory;
 
     void initializePieceRow(int row, PieceColor color);
     void initializePawnRow(int row, PieceColor color);
@@ -33,6 +40,7 @@ public:
         initializeEmptyRows();
         initializePawnRow(6, PieceColor::Black);
         initializePieceRow(7, PieceColor::Black);
+        moveHistory.clear();
     }
 
     MoveResult move(int src_row, int src_col, int trg_row, int trg_col);
@@ -46,6 +54,10 @@ public:
     bool isSquareAttacked(int row, int col, PieceColor color) const;
     void performCastling(int src_row, int src_col, int trg_row, int trg_col);
     int checkForPromotion(int dest_row, int dest_col);
+    void performEnPassant(int src_row, int src_col, int trg_row, int trg_col);
+    void removePiece(int row, int col);
+    Move getLastMove() const;
+    bool isEnPassant(int src_row, int src_col, int trg_row, int trg_col) const;
 };
 
 std::shared_ptr<Board> getBoard();
