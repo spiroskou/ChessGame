@@ -194,6 +194,12 @@ static void showCheckmateMessage()
 	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", message.c_str(), window);
 }
 
+static void showStalemateMessage()
+{
+	std::string message = "Stalemate! Game has ended in draw!";
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game Over", message.c_str(), window);
+}
+
 static void showOpponentPieceMessage()
 {
 	std::string message = "You can't move an opponent's piece!";
@@ -229,6 +235,9 @@ void ChessSDL_ShowMoveMessage(MoveResult res)
 		break;
 	case MoveResult::Checkmate:
 		showCheckmateMessage();
+		break;
+	case MoveResult::Stalemate:
+		showStalemateMessage();
 		break;
 	case MoveResult::ValidMove:
 		break;

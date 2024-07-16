@@ -16,6 +16,7 @@ enum class MoveResult {
     InvalidMove,
     KingInCheck,
     Checkmate,
+    Stalemate,
     ValidMove
 };
 
@@ -58,6 +59,7 @@ public:
     void removePiece(int row, int col);
     Move getLastMove() const;
     bool isEnPassant(int src_row, int src_col, int trg_row, int trg_col) const;
+    bool isStalemate();
 };
 
 std::shared_ptr<Board> getBoard();

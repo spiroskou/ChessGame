@@ -48,7 +48,7 @@ int main(int argc, char* args[])
 
                     MoveResult res = makeTheMove(src_row, src_col, dest_row, dest_col);
 
-                    if (res == MoveResult::Checkmate) {
+                    if (res == MoveResult::Checkmate || res == MoveResult::Stalemate) {
                         ChessSDL_RenderChessBoard();
                         ChessSDL_ShowMoveMessage(res);
                         quit = true;

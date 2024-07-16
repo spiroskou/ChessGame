@@ -255,22 +255,19 @@ bool Board::isCheckmate()
 		for (int col = king_col - 1; col <= king_col + 1; ++col) {
 			if (row >= 0 && row < 8 && col >= 0 && col < 8 && !(row == king_row && col == king_col)) {
 				std::shared_ptr<Piece> piece = getPiece(row, col);
-				if (!piece) continue;
+				if (piece && piece->getColor() == opp_color) continue;
+				int dum_king_row = -1, dum_king_col = -1;
 
-				if (piece->getColor() != opp_color) {
-					int dum_king_row = -1, dum_king_col = -1;
+				// Try to move the king to the target position and check if it's still in check
+				king = getKing(opp_color, dum_king_row, dum_king_col);
+				std::shared_ptr<Piece> tmp_piece = replace(dum_king_row, dum_king_col, row, col);
+				bool still_in_check = isKingInCheck(opp_color);
 
-					// Try to move the king to the target position and check if it's still in check
-					king = getKing(opp_color, dum_king_row, dum_king_col);
-					std::shared_ptr<Piece> tmp_piece = replace(dum_king_row, dum_king_col, row, col);
-					bool still_in_check = isKingInCheck(opp_color);
+				// Undo the move
+				restore(dum_king_row, dum_king_col, row, col, tmp_piece);
 
-					// Undo the move
-					restore(dum_king_row, dum_king_col, row, col, tmp_piece);
-
-					if (!still_in_check) {
-						return false; // King has at least one legal move to escape check
-					}
+				if (!still_in_check) {
+					return false; // King has at least one legal move to escape check
 				}
 			}
 		}
@@ -307,6 +304,45 @@ bool Board::isCheckmate()
 	// If the king has no legal moves to escape check, it's checkmate
 	return true;
 
+}
+bool Board::isStalemate() 
+{
+	// Get the position of the current player's king
+	int kingRow = -1, kingCol = -1;
+	std::shared_ptr<King> king = getKing(getColor(), kingRow, kingCol);
+
+	// If the king is in check, it's not a stalemate
+	if (isKingInCheck(getColor())) {
+		return false;
+	}
+
+	// Iterate through all pieces of the current player
+	for (int row = 0; row < 8; ++row) {
+		for (int col = 0; col < 8; ++col) {
+			std::shared_ptr<Piece> piece = getPiece(row, col);
+			if (piece && piece->getColor() == getColor()) {
+				// Check all possible moves for this piece
+				for (int destRow = 0; destRow < 8; ++destRow) {
+					for (int destCol = 0; destCol < 8; ++destCol) {
+						if (piece->isValidMove(row, col, destRow, destCol)) {
+							// Simulate the move
+							std::shared_ptr<Piece> tmpPiece = replace(row, col, destRow, destCol);
+							bool stillInCheck = isKingInCheck(getColor());
+							restore(row, col, destRow, destCol, tmpPiece);
+
+							// If the move does not leave the king in check, it's not a stalemate
+							if (!stillInCheck) {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// If no legal moves are found, it's a stalemate
+	return true;
 }
 
 void Board::performCastling(int src_row, int src_col, int trg_row, int trg_col) 
@@ -374,6 +410,10 @@ MoveResult Board::move(int src_row, int src_col, int trg_row, int trg_col)
 
 	if (isCheckmate()) {
 		return MoveResult::Checkmate;
+	}
+
+	if (isStalemate()) {
+		return MoveResult::Stalemate;
 	}
 
 	if (checkForPromotion(trg_row, trg_col)) {
